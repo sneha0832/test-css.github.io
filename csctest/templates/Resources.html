@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <style>
+        body, html {
+            background-color: #6dcff6;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        .header {
+            position: relative;
+            height: 30vh; /* Adjust height as needed */
+            background-image: url('./.png'); /* Set the image as background */
+            background-size: cover; /* Make sure the background image covers the entire header */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            padding: 10px;
+            background-color: #6dcff6;
+            background-image: url('{% static "HomeButton.png" %}'); 
+            background-size: cover; 
+            background-repeat: no-repeat;
+            text-indent: -9999px;
+            color: transparent; /* Hide text */
+        }
+        
+
+
+
+        .home-button:hover {
+            background-color: #9b51e0; 
+        }
+
+        .title-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px; /* Add padding to the box */
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+            border: 2px solid black; /* Black border */
+            z-index: 2; /* Ensure box is above the image */
+        }
+
+        .title {
+            font-size: 36px; 
+            color: #000; /* Text color */
+            text-align: center;
+            margin: 0; /* Remove default margin */
+        }
+
+        .frame {
+            background-color: white; /* Set background color to white */
+            padding: 30px; /* Add padding to create space inside the box */
+            border: 1px solid black; 
+            width: 70%; /* Adjust width as needed */
+            margin: 0 auto; /* Center horizontally */
+            margin-top: 20px; /* Add top margin to create space below header */
+        }
+
+        h2 {
+        font-weight: normal;
+        color: black;
+        font-size: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="google_translate_element"></div>
+    <div class="header">
+        <a href="{% url 'homepage_view' %}">
+            <div class="home-button"></div>
+        </a>
+        <div class="title-box">
+            <h1 class="title">Resources</h1> <!-- Title text inside the box -->
+        </div>
+    </div>
+    
+    <div class="frame">
+        <!-- First frame content goes here -->
+        
+        <p>
+            <a href="https://www.vroom.org/">Vroom</a><br>
+            Explore Vroom's collection of engaging activities designed to spark your child's curiosity and promote early learning development.
+        </p>
+        <p>
+            <a href="https://glazermuseum.org/visit">Plan your visit</a><br>
+            There’s something new to discover with each visit to Glazer Children’s Museum. Play pretend in your favorite signature exhibits and discover new worlds in our traveling exhibits.
+        </p>
+        <p>
+            <a href="https://glazermuseum.org/memberships/">Membership</a><br>
+            Support GCM by becoming a member today and enjoy a full year of imagination and discovery! 
+        </p>
+        <p>
+            <a href="https://glazermuseum.org/financialaccess/">Financial Access</a><br>
+            GCM believes that every child deserves a fun, safe, and inclusive space for imagination and discovery. Our financial access programs provide families and schools in need with access to museum admission, play sessions, field trips, and camps at little-to-no cost.
+        </p>
+        <p>
+            <a href="Feedback form.html">Feedback Form</a>
+        </p>
+    </div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="{% static 'static/time_tracking.js' %}"></script>
+</body>
+
+</html>

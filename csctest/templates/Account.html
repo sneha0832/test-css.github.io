@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<script src="tosTracker.js"></script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>GCM-Prototype</title>
+    <style>
+        body, html {
+            background-color: #6dcff6;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        .header {
+            position: relative;
+            height: 30vh; /* Adjust height as needed */
+            background-image: url('{% static "artsmart.jpg" %}'); /* Set the image as background */
+            background-size: cover; /* Make sure the background image covers the entire header */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+
+        .home-button {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            padding: 10px;
+            background-color: #6dcff6;
+            background-image: url('{% static "HomeButton.png" %}'); 
+            background-size: cover; 
+            background-repeat: no-repeat;
+            text-indent: -9999px;
+            color: transparent; /* Hide text */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .home-button:hover {
+            background-color: #9b51e0; 
+            transform: scale(1.1);
+        }
+
+        
+
+        .info {
+            color: black;
+            text-align: center;
+            font-size: 18px;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 0 20px 20px;
+        }
+
+        .title-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px; /* Add padding to the box */
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+            border: 2px solid black; /* Black border */
+            z-index: 2; /* Ensure box is above the image */
+        }
+
+        .title {
+            font-size: 20px;
+            color: #000; /* Text color */
+            text-align: center;
+            margin: 0; /* Remove default margin */
+        }
+
+        .frame {
+            background-color: white; /* Set background color to white */
+            padding: 30px; /* Add padding to create space inside the box */
+            border: 1px solid black; 
+            width: 70%; /* Adjust width as needed */
+            margin: 0 auto; /* Center horizontally */
+            margin-top: 20px; /* Add top margin to create space below header */
+        }
+
+        .text-box input[type="text"] {
+            width: 90%; /* Lengthen input box */
+            box-sizing: border-box; 
+            padding: 10px; /* Add padding to the input box */
+        }
+
+        .chat-frame {
+            background-color: white; /* Set background color to white */
+            padding: 30px; /* Similar padding as other frames for consistency */
+            border: 1px solid black;
+            width: 70%; /* Consistent width with other frames */
+            margin: 20px auto 20px; /* Margin to space out from other elements */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="google_translate_element"></div>
+    <div class="header">
+        <a href="{% url 'homepage_view' %}">
+            <div class="home-button"></div>
+        </a>
+    </div>
+
+    <div class="frame">
+        <p class="info"><b>Account</b></p>
+    </div>
+
+    <div class="frame">
+        <div class="info">
+            <h3 class="title">Add Children</h3>
+        </div>
+        <div class="text-box">
+            <a href="{% url 'account' %}">My Account</a>
+            <form action="{% url 'add_child' %}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Add Child</button>
+            </form>
+                {% if children %}
+                    <div>
+                        <h3>Children Associated with Your Account</h3>
+                        <ul>
+                            {% for child in children %}
+                                <li>{{ child.name }} - {{ child.birthdate }} - {{ child.gender }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <div>
+                        <h2>Children Associated with Your Account</h2>
+                        <p>No children added yet.</p>
+                    </div>
+                {% endif %}
+
+
+    <!-- Chatbot frame -->
+    <div class="chat-frame">
+        <form id="chatbot-form">
+            <input type="text" id="chat-input" placeholder="Ask me something...">
+            <button type="submit">Send</button>
+        </form>
+        <div id="chat-response" style="color: red; font-size: 16px; border: 1px solid black;"></div>
+
+    </div>
+
+<script>
+    document.getElementById('chatbot-form').addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent the default form submission
+    const userInput = document.getElementById('chat-input').value;
+    console.log("Sending input to server:", userInput);  // Debug: Log input to console
+
+    fetch(`/chatbot-api?input=${encodeURIComponent(userInput)}`, {
+        method: 'GET',  // Ensure method is GET if you are appending parameters in URL
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();  // Parsing the JSON body of the response
+    })
+    .then(data => {
+        console.log("Received response:", data);  // Debug: Log response to console
+        document.getElementById('chat-response').innerText = data.message;
+    })
+    .catch(error => {
+        console.error('Error during fetch:', error);
+        document.getElementById('chat-response').innerText = 'Failed to get response.';
+    });
+});
+</script>
+
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

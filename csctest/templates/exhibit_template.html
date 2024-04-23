@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>{{ html_page.title }}</title>
+{% if html_page.image %}
+    <style>
+        body, html {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            background-color:#6dcff6 ;
+        }
+
+        .header {
+            position: relative;
+            height: 30vh; /* Adjust height as needed */
+            background-image: url('{{ html_page.image.url }}'); /* Set the image as background */
+            background-size: cover; /* Make sure the background image covers the entire header */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+
+        .home-button {
+            position: absolute;
+            top: 50px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            padding: 10px;
+            background-color: #6dcff6;
+            background-image: url('{% static "HomeButton.png" %}'); 
+            background-size: cover; 
+            background-repeat: no-repeat;
+            text-indent: -9999px;
+            color: transparent; /* Hide text */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .home-button:hover {
+            background-color: #9b51e0; 
+            transform: scale(1.1);
+        }
+        #words {
+            text-align: center;
+            font-size: 24px;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .text {
+            color: black;
+            font-size: 30;
+            
+        }
+        .info {
+            color: dark;
+            text-align: center;
+            font-size: 18px;
+            margin: 0 auto;
+            max-width: 800px;
+            padding : 0 20px 20px;
+            font-family: GCMBase, Arial, sans-serif;
+        }
+        .title-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px; /* Add padding to the box */
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+            border: 2px solid black; /* Black border */
+            z-index: 2; /* Ensure box is above the image */
+        }
+
+        .title {
+            font-size: 36px; 
+            color: #000; /* Text color */
+            text-align: center;
+            margin: 0; /* Remove default margin */
+        }
+
+        .frame {
+            background-color: white; /* Set background color to white */
+            padding: 30px; /* Add padding to create space inside the box */
+            border: 1px solid black; 
+            width: 70%; /* Adjust width as needed */
+            margin: 0 auto; /* Center horizontally */
+            margin-top: 20px; /* Add top margin to create space below header */
+        
+        }
+
+        .text-box input[type="text"] {
+            width: 90%; /* Lengthen input box */
+            box-sizing: border-box; 
+            padding: 10px; /* Add padding to the input box */
+        }
+
+    </style>
+{% endif %}
+</head>
+<body>
+    <div class="header">
+        <a href="{% url 'homepage_view' %}">
+            <div class="home-button"></div>
+        </a>
+    </div>
+    <div id="google_translate_element"></div>
+    <div class="frame">
+        <div id="words">
+            <p>{{ html_page.play_type }}<br> <span class="text"><b>{{ html_page.title }}</b></span></p>
+            <p class="info"><b>{{ html_page.content|safe }}</p>
+        </div>
+    </div>
+
+        <!-- Add this within your .frame div -->
+
+        <div class="frame">
+            <button id="show-recommendations" onclick="fetchActivities()">How is my child learning through play at this exhibit?</button>
+            <div id="activity-recommendations" style="display: none;">
+                <ul id="activities-list"></ul>
+                <button id="hide-recommendations" onclick="toggleRecommendations()">Hide Recommendations</button>
+            </div>
+            <form method="post" action="{% url 'rate_exhibit' html_page.id %}">
+                {% csrf_token %}
+                <div class="rating-form">
+                    <label for="child">Select Child:</label>
+                    <select name="child_id" id="child">
+                        children = request.user.children.all()
+                        {% for child in children %}
+                        <option value="{{ child.id }}">{{ child.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="rating">Rating:</label>
+                        <select name="rating" id="rating">
+                            <option value="1">1 - Had no interest</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10" >10 - Loved it</option>
+                        </select>
+
+                    <button type="submit">Submit Rating</button>
+                </div>
+            </form>
+</div>
+    <script src="{% static 'static/time_tracking.js' %}"></script>
+
+<script type="text/javascript">
+function fetchActivities() {
+    const exhibitName = "{{ html_page.title }}";
+    fetch(`/get-activities-for-exhibit/${encodeURIComponent(exhibitName)}/`)
+        .then(response => response.json())
+        .then(data => {
+            const activitiesList = document.getElementById('activities-list');
+            activitiesList.innerHTML = '';
+
+            if (data.error) {
+                console.error(data.error);
+                activitiesList.innerHTML = '<li>' + data.error + '</li>';
+                return;
+            }
+
+            data.activities.forEach(activity => {
+                let listItem = document.createElement('li');
+                listItem.innerHTML = `<strong>${activity.activityName}</strong>: ${activity.description}`;
+                activitiesList.appendChild(listItem);
+            });
+
+            // Show the activities section and the hide button
+            document.getElementById('activity-recommendations').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function toggleRecommendations() {
+    var recommendations = document.getElementById('activity-recommendations');
+    recommendations.style.display = (recommendations.style.display === 'none' ? 'block' : 'none');
+}
+</script>
+
+
+
+<script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+</body>
+</html>

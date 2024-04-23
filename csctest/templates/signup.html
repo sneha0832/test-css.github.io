@@ -1,0 +1,104 @@
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Keep all your styles inline as you haven't got a separate CSS file -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #6dcff6;
+        }
+        
+        h1 { 
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        
+        .container {
+            padding: 16px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        input[type=email], input[type=password], input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        
+        input[type=checkbox] {
+            margin-bottom: 16px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+        
+        button:hover {
+            opacity: 0.8;
+        }
+        
+        a {
+            color: dodgerblue;
+        }
+    </style>
+</head>
+<body>
+<form action="{% url 'register' %}" method="post">  
+    {% csrf_token %}
+    <div class="imgcontainer">
+        <a href="{% url 'homepage_view' %}">
+            <img src="{% static 'HomeButton.png' %}" alt="Avatar" class="avatar">
+        </a>
+    </div>
+
+    <div class="container">
+        <h1>Welcome to the Glazier Children's Museum!</h1>
+        
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        
+        <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+        <button type="submit">Sign Up</button>
+    </div>
+</form>
+</body>
+</html>
+{% endblock %}

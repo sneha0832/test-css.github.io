@@ -1,0 +1,86 @@
+body{
+  background-color: transparent;
+}
+
+.hide{ 
+  background-color: white;
+  border-radius: 5pt;
+  text-align: center;
+  position: absolute;
+  margin: 0 auto;
+  padding: 10px 20px;
+  border: 3px solid #3BBFB9;
+ 
+}
+
+.PartyPlace-txt{
+  top: 70%;
+  left: 45%;
+   
+}
+
+.ArtSmart-txt{
+  top:70%;
+  left: 45%;
+    
+}
+
+.Kidsport-txt{
+  top: 70%;
+  left: 45%;
+}
+
+.Tugboat-txt{
+  top: 70%;
+  left: 45%;
+}
+   
+ .SafetyVillage-txt{
+   top: 70%;
+   left: 45%;
+  }
+
+.Farm-txt{
+  top: 70%;
+  left: 45%;
+}
+
+.EngineerW-txt{
+  top: 70%;
+  left: 45%;
+}
+
+.Theater-txt{
+  top: 70%;
+  left: 45%;
+}
+
+.TemporaryExhib-txt{
+  top: 70%;
+  left: 45%;
+  
+}
+
+.FamilyPlay-txt{
+  top: 70%;
+  left: 45%;
+}
+
+
+.OceanSandbox-txt{
+  top: 70%;
+  left: 45%;
+  
+}
+.Fort-txt{
+  top: 70%;
+  left: 45%;
+  
+}
+
+.WaterJourney-txt{
+  top: 70%;
+  left: 45%;
+  
+    
+}

@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>GCM-Prototype</title>
+    <style>
+        body, html {
+            background-color: #6dcff6;
+            font-family: GCMBase, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        .header {
+            position: relative;
+            height: 30vh; /* Adjust height as needed */
+            background-image: url({% static 'Play.png'%} ); /* Set the image as background */
+            background-size: cover; /* Make sure the background image covers the entire header */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid white;
+            padding: 10px;
+            background-color: #6dcff6;
+            background-image:url('{% static "HomeButton.png" %}'); 
+            background-size: cover; 
+            background-repeat: no-repeat;
+            text-indent: -9999px;
+            color: transparent; /* Hide text */
+        }
+
+        .home-button:hover {
+            background-color: #9b51e0; 
+        }
+
+        .title-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px; /* Add padding to the box */
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+            border: 2px solid white; /* Black border */
+            z-index: 2; /* Ensure box is above the image */
+        }
+
+        .title {
+            font-size: 36px; 
+            color: #000; /* Text color */
+            text-align: center;
+            margin: 0; /* Remove default margin */
+        }
+
+        .frame {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            background-color: white; /* Set background color to white */
+            padding: 30px; /* Add padding to create space inside the box */
+            border: 1px solid white; 
+            width: 70%; /* Adjust width as needed */
+            margin: 20px auto 0;
+        }
+        
+        .image {
+            max-width: 100%;         /* Maximum width is 100% of the frame */
+            max-height: 100%;
+            display: block; /* Make image a block-level element */
+            margin: 0 auto; /* Auto margins on the sides centers the image */
+         /* Optional: Makes image responsive */
+            height: auto;
+
+        }
+
+        .info {
+            color: black;
+            text-align: center;
+            font-size: 18px;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 0 20px 20px;
+        }
+
+
+
+       
+       
+        h2 {
+        font-weight: normal;
+        color: black;
+        font-size: 15px;
+        }
+    
+        h3 {
+        font-weight: normal;
+        color: black;
+        font-size: 13px;
+        margin: auto;
+
+        }
+
+        h4 {
+        font-weight: normal;
+        color: black;
+        font-size: 10px;
+        }
+    
+
+       
+
+    </style>
+</head>
+
+<body>
+    <div id="google_translate_element"></div>
+    <div class="header">
+        <a href="{% url 'homepage_view' %}">
+            <div class="home-button"></div>
+        </a>
+        <div class="title-box">
+            <h1 class="title">Play </h1> <!-- Title text inside the box -->
+        </div>
+    </div>
+    
+<div class="frame">
+  <div class="image">
+    <img src="{% static 'ChildPlay.png' %}" alt="Child Play Image">
+  </div>
+</div>
+        
+
+
+
+<div class="frame">
+    <p class="info"><b>Learn About Play!</b></p>
+    <br>
+        <div style="display: flex; justify-content: center;">
+            <form id="playTypeForm">
+                {% csrf_token %}
+                <select name="play_type" required>
+                    <option value="" disabled selected>Select play type</option>
+                    <option value="Physical">Physical Play</option>
+                    <option value="Socio-Emotional">Socio-Emotional Play</option>
+                    <option value="Sensory">Sensory Play</option>
+                    <option value="Cognitive">Cognitive Play</option>
+                    <option value="Communication">Communication Play</option>
+                </select>
+                <button type="submit">Submit</button>
+            </form>
+            <div id="resultsContainer" style="margin-top: 20px;">
+            <!-- Results will be displayed here -->
+        </div>
+    </div>
+</div>
+<script>
+document.getElementById('playTypeForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const playType = this.play_type.value;
+    fetch('{% url 'get_activities' %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: 'play_type=' + encodeURIComponent(playType),
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            return response.text().then(text => { throw new Error(text || 'Server responded with status: ' + response.status) });
+        }
+    })
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        // Process the JSON data as before
+        const resultsContainer = document.getElementById('resultsContainer');
+        let content = `<h2>${playType} Play</h2><p>${data.typeDescription}</p><ul>`;
+        data.activities.forEach(activity => {
+            content += `<li>${activity.activityName}: ${activity.description}</li>`;
+        });
+        content += '</ul>';
+        resultsContainer.innerHTML = content;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('resultsContainer').innerHTML = `<p>Error: ${error.message}</p>`;
+    });
+});
+</script>
+
+
+    
+    
+        
+   
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="{% static 'static/time_tracking.js' %}"></script>
+</body>
+
+</html>

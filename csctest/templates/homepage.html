@@ -1,0 +1,491 @@
+{% load static %}
+{%block content%}
+<!DOCTYPE html>
+<html lang="en">
+<script src="tosTracker.js"></script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<!-- CODE FOR GOOGLE TRANSLATE -->
+    <div id="google_translate_element"></div>
+    <div class = "header" ></div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/timeonsite/1.2.0/timeonsitetracker.js"></script>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!-- CODE FOR TIMEONSITE TRACKER -->
+<script>
+    var config = {
+        // track page by seconds. Default tracking is by milliseconds
+        trackBy: 'seconds',
+        callback: function(data) { /* callback denotes your data tracking is real-time */
+            console.log(data);
+            var endPointUrl = 'http://localhost:8000/track-tos/'; //Replace with your actual backend API URL
+            if (data && data.trackingType) {
+                if (data.trackingType == 'tos') {
+                    if (Tos.verifyData(data) != 'valid') {
+                        console.log('Data abolished!');
+                        return;
+                    }
+                }
+
+                // make use of sendBeacon if this API is supported by your browser.
+                if (navigator && typeof navigator.sendBeacon === 'function') {
+                    data.trasferredWith = 'sendBeacon';
+                    var blob = new Blob([JSON.stringify(data)], {type : 'application/json'});
+                    navigator.sendBeacon(endPointUrl, blob);
+                }
+            }
+        }
+    };
+    var Tos;
+    if (TimeOnSiteTracker) {
+        Tos = new TimeOnSiteTracker(config);
+    }
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        body {
+            background-color: #6dcff6;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            position: relative;
+            height: 10vh; /* Adjust height as needed */
+            width: 100%;
+            background-image: url('{% static "1.jpg" %}'); /* Set the image as background */
+            background-size: cover; /* Make sure the background image covers the entire header */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+    .map-section {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%; /* Use 100% of the width */
+            height: 100vh; /* Optionally set a minimum height */
+             overflow: hidden;
+        }
+
+        .level-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Space between buttons */
+            width: 100%; /* Use 100% of the width */
+        }
+
+        .map-container {
+            width: 100%;
+            height: 100%;
+            margin:0;
+            padding:0;/* Use the full width */
+            border: 1px solid #3BBFB9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%; /* Set a minimum height, or make it responsive to the content */
+            border: none;
+            overflow: hidden;
+
+        }
+
+         .map-container .no-scroll {
+            pointer-events: none; /* Optional: Disables mouse events on the iframe */
+            overflow: hidden; /* Ensures no internal scrolling is possible */
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 600px) {
+            .level-buttons, .map-container iframe{
+               width: 100%;
+                max-width: 100%;
+            }
+
+            @media (max-width: 600px) {
+                .map-section {
+                margin-top: 0;
+        }
+    }
+
+            .map-container iframe {
+                height: 50vh;
+
+
+
+            }
+        }
+
+
+
+
+        .imgcontainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .imgcontainer img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        ul #horizontal, #horizontal ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        #horizontal > li {
+            float: left;
+            position: relative;
+        }
+
+        #horizontal > li > a {
+            display: block;
+            padding: 10px;
+            background-color: #9b51e0;
+            color: white;
+            text-decoration: none;
+            border: 1px solid white;
+        }
+
+        #horizontal > li > a:hover {
+            color: #107A83;
+        }
+
+        #horizontal > li > ul {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        #horizontal > li:hover > ul, #horizontal > li ul li:hover > ul {
+            display: block;
+        }
+
+        #horizontal li ul li {
+            position: relative;
+            float: none;
+        }
+
+        #horizontal li ul li a {
+            display: block;
+            background-color: #9b51e0;
+            color: white;
+            padding: 5px;
+            text-decoration: none;
+        }
+
+        #horizontal li ul li a:hover {
+            background-color: #7d3cb3;
+        }
+
+        #horizontal li ul li ul {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            min-width: 100%;
+        }
+
+        #horizontal li ul li:hover > ul {
+            display: block;
+        }
+        .cookie-consent-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,.2);
+            border-radius: 5px;
+            z-index: 1000; /* Ensure it appears above other content */
+            display: none; /* Hidden by default */
+        }
+
+        .cookie-consent-content p {
+            margin: 0 0 20px;
+        }
+
+        .cookie-consent-buttons {
+            text-align: right;
+        }
+
+        .btn-cookie {
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+
+        /* Hamburger Menu Styles */
+        .hamburger-menu .menu-icon {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 10px;
+        }
+
+        .hamburger-menu .menu-icon div {
+            background-color: #333;
+            height: 2px;
+            width: 30px;
+        }
+
+        .menu-content {
+            display: none;
+            flex-direction: column;
+            background-color: #f9f9f9;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            height: auto; /* Adjust height to content */
+            max-height: 100vh; /* Prevent exceeding viewport height */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1000;
+            overflow-y: auto
+        }
+
+        .menu-content a {
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+
+        .menu-content a:hover {
+            background-color: #ddd;
+        }
+
+        .menu-content a, .dropdown-content a {
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+        .menu-content a:hover, .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .menu-content a.dropdown-toggle {
+            cursor: pointer;
+            /* Makes it clear it's clickable */
+        }
+        /* Ensures nested menus are initially hidden */
+        .nested-menu {
+            display: none;
+            position: relative;
+            padding-left: 20px;
+            /* Indent nested menu items for visual hierarchy */
+        }
+        .nested-menu a {
+            display: block; /* Ensure proper block layout */
+            padding: 5px 10px; /* Consistent padding */
+            color: #333; /* Text color */
+            text-decoration: none; /* Remove underlines */
+        }
+        .nested-menu a:hover {
+            background-color: #ddd; /* Hover background */
+        }
+        /* Style for second-level nested menus */
+        .sub-nested-menu {
+            display: none;
+            padding-left: 20px;
+            overflow-y: auto/* Further indentation for sub-level items */
+        }
+
+       .frame {
+            background-color: white; /* Set background color to white */
+            padding: 30px; /* Add padding to create space inside the box */
+            border: 1px solid black;
+            width: 70%; /* Adjust width as needed */
+            margin: 0 auto; /* Center horizontally */
+            margin-top: 20px;
+
+       .info {
+            color: dark;
+            text-align: center;
+            font-size: 18px;
+            margin: 0 auto;
+            max-width: 800px;
+            padding : 0 20px 20px;
+        }
+       .no-scroll {
+           overflow: hidden;
+}
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="imgcontainer"></div>
+    <div>
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+            <a href="{% url 'custom_logout' %}?next={{ request.path }}">Logout</a> <!-- Ensure you have a URL named 'logout' --><!-- Adjust based on your URL name for registration -->
+        {% endif %}
+    </div>
+
+<div class="hamburger-menu">
+    <div class="menu-icon" onclick= "toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <div class="menu-content" id="menuContent">
+        <a class="dropdown-toggle" onclick="toggleDropdown('exhibitsDropdown')">Exhibits</a>
+        <div class="nested-menu" id="exhibitsDropdown">
+            {% for exhibit in html_pages %}
+                <a href="{% url 'html_view' pk=exhibit.pk %}">{{ exhibit.title }}</a>
+            {% endfor %}
+        </div>
+
+
+        <a href="Resources.html">Resources</a>
+        <a href="Play.html">Play</a>
+        <a class="dropdown-toggle" onclick="toggleDropdown('aboutDropdown')">About</a>
+        <div class="nested-menu" id="aboutDropdown">
+            <a href="https://glazermuseum.org/mission/">Mission + History</a>
+            <a href="https://glazermuseum.org/deai/">DEAI Statement</a>
+            <a href="https://glazermuseum.org/contact/">Contact</a>
+        </div>
+        <a href = "Account.html">Account</a>
+        <a href="login.html">Login</a>
+        <a href="{% url 'admin:index' %}">Login(Admin)</a>
+
+    </div>
+</div>
+
+
+    <div class="frame">
+        <p class="info"><b>Welcome to the Glazer Children's Museum! Here, your child can LEARN through PLAY.</b></p>
+    </div>
+
+
+
+    <div class="map-section">
+        <div class="level-buttons">
+            <button onclick="showLevel('Level1')">Level 1</button>
+            <button onclick="showLevel('Level2')">Level 2</button>
+            <button onclick="showLevel('Level3')">Level 3</button>
+        </div>
+
+   <div class="map-container" id="level1-container" style="display: block;">
+    <iframe src="{% static 'maps/Level1/interactive_map/dist/index1.html' %}" ></iframe>
+</div>
+<div class="map-container" id="level2-container" style="display: none;">
+    <iframe src="{% static 'maps/Level2/level2/dist/index.html' %}"></iframe>
+</div>
+<div class="map-container" id="level3-container" style="display: none;">
+    <iframe src="{% static 'maps/Level3/level3/dist/index3.html' %}"></iframe>
+</div>
+
+
+    <div id="cookieConsentPopup" class="cookie-consent-popup">
+        <div class="cookie-consent-content">
+            <p>Cookies legal stuff here idk what else to put for a placeholder</p>
+            <div class="cookie-consent-buttons">
+                <button id="btnAcceptCookies" class="btn-cookie">Continue</button>
+                <button id="btnNecessaryCookies" class="btn-cookie">Only Use Necessary</button>
+            </div>
+        </div>
+    </div>
+    <!-- Cookie Consent JavaScript -->
+
+
+
+
+    <script>
+        function showLevel(level) {
+            // Hide all map containers
+
+
+            var mapContainers = document.querySelectorAll('.map-container');
+            mapContainers.forEach(function(container) {
+                container.style.display = 'none';
+            });
+
+            // Show the selected map container
+            var selectedContainer = document.getElementById(level.toLowerCase() + '-container');
+            if (selectedContainer) {
+                selectedContainer.style.display = 'block';
+
+            } else {
+                console.error("Container not found for level:", level);
+            }
+        }
+
+    </script>
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var menu = document.getElementById('menuContent');
+        var menuIcon = document.querySelector('.menu-icon');
+
+        function toggleMenu() {
+            // Toggle menu display on click
+            var menu = document.getElementById('menuContent');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            if(menu.style.display === 'flex'){
+                document.body.classList.add('no-scroll');
+            } else {
+                document.body.classList.remove('no-scroll');
+            }
+        }
+
+        menuIcon.onclick = function(event) {
+
+            event.stopPropagation();
+            toggleMenu();
+        };
+
+        document.addEventListener('click', function(event) {
+            var target = event.target;
+            // Check if the click is outside the menu and the menu is currently displayed
+            if (menu.style.display === 'flex' && !menu.contains(target) && !menuIcon.contains(target)) {
+                // Close the menu
+                menu.style.display = 'none';
+            }
+        });
+
+        function toggleDropdown(dropdownId) {
+            var dropdown = document.getElementById(dropdownId);
+            if (dropdown) {
+                // Toggle dropdown display
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            }
+        }
+
+
+        window.toggleDropdown = toggleDropdown;
+    });
+</script>
+</body>
+</html>
+{%endblock%}
