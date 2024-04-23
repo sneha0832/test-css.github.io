@@ -1,0 +1,7 @@
+2,admin,logentry
+4,auth,group
+3,auth,permission
+5,auth,user
+6,contenttypes,contenttype
+1,pages,tostracker
+7,sessions,session

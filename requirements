@@ -1,0 +1,23 @@
+altgraph @ file:///AppleInternal/Library/BuildRoots/9dd5efe2-7fad-11ee-b588-aa530c46a9ea/Library/Caches/com.apple.xbs/Sources/python3/altgraph-0.17.2-py2.py3-none-any.whl
+asgiref==3.8.1
+distlib==0.3.8
+Django==4.2.11
+django-appconf==1.0.6
+django-user-accounts==3.3.2
+filelock==3.13.3
+future @ file:///AppleInternal/Library/BuildRoots/9dd5efe2-7fad-11ee-b588-aa530c46a9ea/Library/Caches/com.apple.xbs/Sources/python3/future-0.18.2-py3-none-any.whl
+gunicorn==21.2.0
+macholib @ file:///AppleInternal/Library/BuildRoots/9dd5efe2-7fad-11ee-b588-aa530c46a9ea/Library/Caches/com.apple.xbs/Sources/python3/macholib-1.15.2-py2.py3-none-any.whl
+mysqlclient==2.2.4
+packaging==24.0
+pbr==6.0.0
+platformdirs==4.2.0
+PyMySQL==1.1.0
+pytz==2024.1
+six @ file:///AppleInternal/Library/BuildRoots/9dd5efe2-7fad-11ee-b588-aa530c46a9ea/Library/Caches/com.apple.xbs/Sources/python3/six-1.15.0-py2.py3-none-any.whl
+sqlparse==0.4.4
+stevedore==5.2.0
+typing_extensions==4.10.0
+virtualenv==20.25.1
+virtualenv-clone==0.5.7
+virtualenvwrapper==6.1.0
